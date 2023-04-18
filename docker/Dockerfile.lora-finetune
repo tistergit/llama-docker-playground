@@ -11,10 +11,10 @@ WORKDIR /app
 COPY alpaca-lora/ .
 COPY pip/ .
 
-WORKDIR /app/pip/transformers
+WORKDIR /app/transformers
 RUN pip install .
 
-WORKDIR /app/pip/peft
+WORKDIR /app/peft
 RUN pip install .
 
 RUN pip install datasets loralib sentencepiece bitsandbytes gradio fire
