@@ -24,4 +24,4 @@ WORKDIR /app/alpaca-lora
 COPY lora/patches/single.py finetune.py
 # COPY lora/patches/ .
 COPY scripts/ .
-
+COPY cmd/ .
