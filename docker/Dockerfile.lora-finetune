@@ -3,16 +3,24 @@
 FROM ngc.nju.edu.cn/nvidia/pytorch:23.03-py3
 LABEL org.opencontainers.image.authors="tister@qq.com"
 
+
+RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && pip install --upgrade pip
+
 WORKDIR /app
 
-RUN git clone https://github.com/tloen/alpaca-lora.git
+COPY alpaca-lora/ .
+COPY pip/ .
 
-WORKDIR /app/alpaca-lora
+WORKDIR /app/pip/transformers
+RUN pip install .
 
-RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && pip install --upgrade pip && \
-    pip install datasets loralib sentencepiece git+https://github.com/huggingface/transformers.git bitsandbytes git+https://github.com/huggingface/peft.git gradio fire
+WORKDIR /app/pip/peft
+RUN pip install .
+
+RUN pip install datasets loralib sentencepiece bitsandbytes gradio fire
 
 # Patch for 1-click fine-tune
+WORKDIR /app/alpaca-lora
 COPY lora/patches/single.py finetune.py
 # COPY lora/patches/ .
 COPY scripts/ .
