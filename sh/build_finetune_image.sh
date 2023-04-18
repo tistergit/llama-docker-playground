@@ -1,1 +1,0 @@
-docker build -t soulteary/llama:alpaca-lora-finetune . -f docker/Dockerfile.lora-finetune
