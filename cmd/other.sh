@@ -32,3 +32,10 @@ python generate.py \
     --load_8bit \
     --base_model 'weights/hf' \
     --lora_weights 'weights/chinese-alpaca-lora-7b'
+
+
+
+docker run   --ipc=host  --rm -it \
+    -v `pwd`/models:/app/alpaca-lora/models \
+    -v `pwd`/weights:/app/alpaca-lora/weights \
+    mirrors.tencent.com/rms/llama_finetune:v2 /app/alpaca-lora/down_model.sh
