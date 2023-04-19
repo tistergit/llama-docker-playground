@@ -34,7 +34,7 @@ TARGET_MODULES = [
     "q_proj",
     "v_proj",
 ]
-DATA_PATH = "alpaca_data_cleaned.json"
+DATA_PATH = "samples/alpaca_data_cleaned.json"
 OUTPUT_DIR = "lora-alpaca"
 
 device_map = "auto"
