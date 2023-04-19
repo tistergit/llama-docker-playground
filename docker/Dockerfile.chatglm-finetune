@@ -5,7 +5,7 @@ LABEL org.opencontainers.image.authors="tister@qq.com"
 
 WORKDIR /app
 
-RUN git clone https://huggingface.co/THUDM/chatglm-6b
+RUN git clone https://github.com/THUDM/ChatGLM-6B.git
 
 
 WORKDIR /app/ChatGLM-6B
