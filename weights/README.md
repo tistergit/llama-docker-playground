@@ -1,0 +1,2 @@
+transformers hf文件目录，训练过程中依赖这个目录的文件。
+它的内容通过cmd/convert_llama_weights_to_hf.sh 转换得到
