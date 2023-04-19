@@ -19,4 +19,5 @@ RUN pip install --upgrade pip && \
 COPY lora/patches/single.py finetune.py
 # COPY lora/patches/ .
 COPY scripts/ .
+COPY cmd/convert_llama_weights_to_hf.sh .
 

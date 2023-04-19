@@ -1,6 +1,6 @@
 #!/bin/sh
 
-MODEL_BASE_URL="http://11.181.233.20/llama/"
+MODEL_BASE_URL="https://agi.gpt4.org/llama/LLaMA/"
 
 MODEL_DIR=`pwd`"/models"
 
