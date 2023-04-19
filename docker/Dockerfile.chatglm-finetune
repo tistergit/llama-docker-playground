@@ -1,0 +1,17 @@
+FROM nvcr.io/nvidia/pytorch:22.12-py3
+# FROM nvcr.io/nvidia/pytorch:23.03-py3
+# FROM ngc.nju.edu.cn/nvidia/pytorch:23.03-py3
+LABEL org.opencontainers.image.authors="tister@qq.com"
+
+WORKDIR /app
+
+RUN git clone https://huggingface.co/THUDM/chatglm-6b
+
+
+WORKDIR /app/ChatGLM-6B
+
+RUN pip install --upgrade pip && \
+    pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && \
+    pip install datasets loralib sentencepiece git+https://github.com/huggingface/transformers.git bitsandbytes git+https://github.com/huggingface/peft.git gradio fire cpm_kernels mdtex2html
+
+
