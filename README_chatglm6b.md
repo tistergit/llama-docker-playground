@@ -1,6 +1,6 @@
-## ChatGLM-6B 相关模型的Finetune
+## ChatGLM-6B 相关模型的Fine-tuning
 
-该项目通过Docker镜像为大家提供一个整合好的finetune环境，使用它可以对ChatGLM-6B模型进行finetune。
+该项目通过Docker镜像为大家提供一个整合好的Fine-tuning环境，使用它可以对ChatGLM-6B模型进行finetune。
 如果你发现默认镜像不符合你的要求，也可以在基础dockerfile上更新，构建适合你的镜像
 
 
