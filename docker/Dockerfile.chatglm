@@ -12,7 +12,9 @@ WORKDIR /app/ChatGLM-6B
 
 RUN pip install --upgrade pip && \
     pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && \
-    pip install datasets loralib sentencepiece git+https://github.com/huggingface/transformers.git bitsandbytes git+https://github.com/huggingface/peft.git gradio fire cpm_kernels mdtex2html deepspeed
+    pip install datasets loralib sentencepiece git+https://github.com/huggingface/transformers.git \ 
+    bitsandbytes git+https://github.com/huggingface/peft.git \
+    gradio fire cpm_kernels mdtex2html deepspeed jieba rouge_chinese nltk
 
 # 加入listen on 0.0.0.0，方便在容器外访问
 COPY patches/chatglm/web_demo.py web_demo.py

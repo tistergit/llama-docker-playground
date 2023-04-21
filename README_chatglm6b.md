@@ -99,4 +99,10 @@ cmd/build_image4chatglm.sh
    打开浏览器，输入服务器IP+8080端口即可访问
    ![推理web窗口](./assets/image-1.png)
 
+
+4. Fine-tune(参数微调)
+   [原文档参考](https://github.com/THUDM/ChatGLM-6B/tree/main/ptuning)
+
+   
+
   enjoy it ~~~
