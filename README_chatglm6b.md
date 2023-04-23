@@ -100,9 +100,44 @@ cmd/build_image4chatglm.sh
    ![推理web窗口](./assets/image-1.png)
 
 
-4. Fine-tune(参数微调)
+### Fine-tune(参数微调)
    [原文档参考](https://github.com/THUDM/ChatGLM-6B/tree/main/ptuning)
 
-   
+1. 获取镜像
+   获取Docker镜像有两种方式：获取已有镜像和构建自己的Docker镜像（如果现有镜像不能满足需求）
+   - 拉取现有镜像：
+      ```shell
+      docker pull mirrors.tencent.com/rms/llama_finetune:chatglm
+      ```
+   - 构建自己的镜像:
+      编辑 docker/Dockerfile.chatglm 文件，然后执行以下命令:
+      ```shell
+      ./cmd/build_image4chatglm.sh
+      ```
+
+2. 下载数据集
+   下面是官方的一个数据集示例，ADGEN 数据集任务为根据输入（content）生成一段广告词（summary）。
+   ```
+   {
+      "content": "类型#上衣*版型#宽松*版型#显瘦*图案#线条*衣样式#衬衫*衣袖型#泡泡袖*衣款式#抽绳",
+      "summary": "这件衬衫的款式非常的宽松，利落的线条可以很好的隐藏身材上的小缺点，穿在身上有着很好的显瘦效果。领口装饰了一个可爱的抽绳，漂亮的绳结展现出了十足的个性，配合时尚的泡泡袖型，尽显女性甜美可爱的气息。"
+   }
+   ```
+   从 [Google Drive](https://drive.google.com/file/d/13_vf0xRTQsyneRKdD1bZIr93vBGOczrk/view?usp=sharing) 或者 [Tsinghua Cloud](https://cloud.tsinghua.edu.cn/f/b3f119a008264b1cabd1/?dl=1) 下载处理好的 ADGEN 数据集，将解压后的 AdvertiseGen 目录放到本目录下。
+   下载数据集数据，放到 samples目录下，如下：
+   ```
+   (base) [root@11-181-233-20 samples]# tree AdvertiseGen/
+   AdvertiseGen/
+   ├── dev.json
+   └── train.json
+
+   0 directories, 2 files
+   ```
+
+3. Finetune
+   启动Finetune，如果是T4显卡，采用fp16会出现显存不足的情况，需要在ds_train.finetune.sh文件的最后，加上一行：--quantization_bit 4 
+   ```shell
+   bash ds_train_finetune.sh
+   ```
 
   enjoy it ~~~
