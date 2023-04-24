@@ -2,7 +2,7 @@
 
 MODEL_BASE_URL="https://mirrors.tencent.com/repository/generic/llm_repo/"
 
-MODEL_DIR=`pwd`"/models"
+MODEL_DIR=`pwd`"/samples/"
 
 RETRY=3
 
@@ -13,9 +13,8 @@ usage() {
 
 
 dl_adgen() {
-	wget -c -t ${RETRY} ${MODEL_BASE_URL}/llama/7B/consolidated.00.pth -O ${MODEL_DIR}/7B/consolidated.00.pth
-	wget -c -t ${RETRY} ${MODEL_BASE_URL}/llama/7B/params.json -O ${MODEL_DIR}/7B/params.json
-	wget -c -t ${RETRY} ${MODEL_BASE_URL}/llama/7B/checklist.chk -O ${MODEL_DIR}/7B/checklist.chk
+	wget -c -t ${RETRY} ${MODEL_BASE_URL}/samples/adgen/dev.json -O ${MODEL_DIR}/AdvertiseGen/dev.json
+	wget -c -t ${RETRY} ${MODEL_BASE_URL}/samples/adgen/train.json -O ${MODEL_DIR}/AdvertiseGen/train.json
 } 
 
 
