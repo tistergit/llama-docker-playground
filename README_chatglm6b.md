@@ -17,9 +17,9 @@ docker run hello-world
 
 1. 编辑 docker/Dockerfile.chatglm-finetune 文件
 2. 构建镜像
-```shell
-cmd/build_image4chatglm.sh
-```
+   ```shell
+   cmd/build_image4chatglm.sh
+   ```
 3. PUSH镜像到仓库（可选）
 
 ### 启动chatglm推理服务
@@ -105,7 +105,11 @@ cmd/build_image4chatglm.sh
    ```
 
 3. Finetune
-   启动Finetune，如果是T4显卡，采用fp16会出现显存不足的情况，需要在ds_train.finetune.sh文件的最后，加上一行：--quantization_bit 4 
+   首先，进入镜像内环境：
+   ```shell
+   cmd/finetune_chatglm.sh
+   ```
+   然后在镜像内，执行如下脚本，启动finetune，需要较长时间，如果担心控制台中断，可以在进行镜像前，启动一个tmux会话窗口。如果是T4显卡，采用fp16会出现显存不足的情况，需要在ds_train.finetune.sh文件的最后，加上一行：--quantization_bit 4 
    ```shell
    bash ds_train_finetune.sh
    ```
