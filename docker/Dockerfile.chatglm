@@ -17,3 +17,4 @@ RUN pip install --upgrade pip && \
 
 # 加入listen on 0.0.0.0，方便在容器外访问
 COPY patches/chatglm/web_demo.py web_demo.py
+COPY patches/chatglm/ds_train_finetune.py ptuning/ds_train_finetune.py
