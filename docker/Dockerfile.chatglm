@@ -15,7 +15,9 @@ RUN pip install --upgrade pip && \
     bitsandbytes git+https://github.com/huggingface/peft.git \
     gradio fire cpm_kernels mdtex2html deepspeed jieba rouge_chinese nltk fastapi uvicorn
 
-RUN apt install net-tools
+RUN set -xe \
+    && apt-get update \
+    && apt-get install net-tools inetutils-ping
 
 # 加入listen on 0.0.0.0，方便在容器外访问
 COPY patches/chatglm/web_demo.py web_demo.py
