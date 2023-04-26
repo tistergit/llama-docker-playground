@@ -17,7 +17,7 @@ RUN pip install --upgrade pip && \
 
 RUN set -xe \
     && apt-get update \
-    && apt-get install net-tools inetutils-ping
+    && apt-get -y install net-tools inetutils-ping
 
 # 加入listen on 0.0.0.0，方便在容器外访问
 COPY patches/chatglm/web_demo.py web_demo.py

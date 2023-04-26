@@ -67,6 +67,18 @@ dl_chatglm6b() {
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-6b/pytorch_model-00008-of-00008.bin -O ${MODEL_DIR}/chatglm-6b/pytorch_model-00008-of-00008.bin
 }
 
+dl_chatglm130b() {
+	mkdir -p ${MODEL_DIR}/chatglm-130b/
+	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-130b/glm-130b-sat/49300/mp_rank_00_model_states.pt  -O ${MODEL_DIR}/chatglm-130b/mp_rank_00_model_states.pt
+	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-130b/glm-130b-sat/49300/mp_rank_01_model_states.pt  -O ${MODEL_DIR}/chatglm-130b/mp_rank_01_model_states.pt
+	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-130b/glm-130b-sat/49300/mp_rank_02_model_states.pt  -O ${MODEL_DIR}/chatglm-130b/mp_rank_02_model_states.pt
+	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-130b/glm-130b-sat/49300/mp_rank_03_model_states.pt  -O ${MODEL_DIR}/chatglm-130b/mp_rank_03_model_states.pt
+	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-130b/glm-130b-sat/49300/mp_rank_04_model_states.pt  -O ${MODEL_DIR}/chatglm-130b/mp_rank_04_model_states.pt
+	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-130b/glm-130b-sat/49300/mp_rank_05_model_states.pt  -O ${MODEL_DIR}/chatglm-130b/mp_rank_05_model_states.pt
+	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-130b/glm-130b-sat/49300/mp_rank_06_model_states.pt  -O ${MODEL_DIR}/chatglm-130b/mp_rank_06_model_states.pt
+	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-130b/glm-130b-sat/49300/mp_rank_07_model_states.pt  -O ${MODEL_DIR}/chatglm-130b/mp_rank_07_model_states.pt
+}
+
 
 while getopts m:h flag
 do
@@ -88,6 +100,7 @@ case "${model}" in
 	30b) dl_30b;;
 	65b) dl_65b;;
 	chatglm6b) dl_chatglm6b;;
+	chatglm130b) dl_chatglm130b;;
 esac
 
 
