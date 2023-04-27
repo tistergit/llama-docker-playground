@@ -17,12 +17,14 @@ dl_comm() {
 }
 
 dl_7b() {
+	dl_comm
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/llama/7B/consolidated.00.pth -O ${MODEL_DIR}/7B/consolidated.00.pth
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/llama/7B/params.json -O ${MODEL_DIR}/7B/params.json
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/llama/7B/checklist.chk -O ${MODEL_DIR}/7B/checklist.chk
 } 
 
 dl_13b() {
+	dl_comm
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/llama/13B/consolidated.00.pth -O ${MODEL_DIR}/13B/consolidated.00.pth
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/llama/13B/consolidated.01.pth -O ${MODEL_DIR}/13B/consolidated.01.pth
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/llama/13B/params.json -O ${MODEL_DIR}/13B/params.json
@@ -30,6 +32,7 @@ dl_13b() {
 }
 
 dl_30b() {
+	dl_comm
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/llama/30B/consolidated.00.pth -O ${MODEL_DIR}/30B/consolidated.00.pth
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/llama/30B/consolidated.01.pth -O ${MODEL_DIR}/30B/consolidated.01.pth
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/llama/30B/consolidated.02.pth -O ${MODEL_DIR}/30B/consolidated.02.pth
@@ -40,6 +43,7 @@ dl_30b() {
 }
 
 dl_65b() {
+	dl_comm
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/llama/65B/consolidated.00.pth -O ${MODEL_DIR}/65B/consolidated.00.pth
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/llama/65B/consolidated.01.pth -O ${MODEL_DIR}/65B/consolidated.01.pth
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/llama/65B/consolidated.02.pth -O ${MODEL_DIR}/65B/consolidated.02.pth
@@ -55,6 +59,13 @@ dl_65b() {
 dl_chatglm6b() {
 	mkdir -p ${MODEL_DIR}/chatglm-6b/
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-6b/ice_text.model  -O ${MODEL_DIR}/chatglm-6b/ice_text.model
+	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-6b/config.json  -O ${MODEL_DIR}/chatglm-6b/config.json
+	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-6b/configuration_chatglm.py  -O ${MODEL_DIR}/chatglm-6b/configuration_chatglm.py
+	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-6b/modeling_chatglm.py  -O ${MODEL_DIR}/chatglm-6b/modeling_chatglm.py
+	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-6b/pytorch_model.bin.index.json -O ${MODEL_DIR}/chatglm-6b/pytorch_model.bin.index.json
+	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-6b/quantization.py-O ${MODEL_DIR}/chatglm-6b/quantization.py
+	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-6b/tokenization_chatglm.py -O ${MODEL_DIR}/chatglm-6b/tokenization_chatglm.py
+	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-6b/tokenizer_config.json -O ${MODEL_DIR}/chatglm-6b/tokenizer_config.json
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-6b/LICENSE -O ${MODEL_DIR}/chatglm-6b/LICENSE
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-6b/MODEL_LICENSE  -O ${MODEL_DIR}/chatglm-6b/MODEL_LICENSE
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-6b/pytorch_model-00001-of-00008.bin -O ${MODEL_DIR}/chatglm-6b/pytorch_model-00001-of-00008.bin
@@ -91,8 +102,6 @@ do
 done
 
 echo $model
-
-dl_comm
 
 case "${model}" in
 	7b) dl_7b;;
