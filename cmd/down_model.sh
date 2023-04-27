@@ -63,7 +63,7 @@ dl_chatglm6b() {
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-6b/configuration_chatglm.py  -O ${MODEL_DIR}/chatglm-6b/configuration_chatglm.py
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-6b/modeling_chatglm.py  -O ${MODEL_DIR}/chatglm-6b/modeling_chatglm.py
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-6b/pytorch_model.bin.index.json -O ${MODEL_DIR}/chatglm-6b/pytorch_model.bin.index.json
-	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-6b/quantization.py-O ${MODEL_DIR}/chatglm-6b/quantization.py
+	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-6b/quantization.py -O ${MODEL_DIR}/chatglm-6b/quantization.py
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-6b/tokenization_chatglm.py -O ${MODEL_DIR}/chatglm-6b/tokenization_chatglm.py
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-6b/tokenizer_config.json -O ${MODEL_DIR}/chatglm-6b/tokenizer_config.json
 	wget -c -t ${RETRY} ${MODEL_BASE_URL}/chatglm-6b/LICENSE -O ${MODEL_DIR}/chatglm-6b/LICENSE
