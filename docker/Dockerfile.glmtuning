@@ -1,0 +1,21 @@
+FROM nvcr.io/nvidia/pytorch:23.04-py3
+
+LABEL org.opencontainers.image.authors="tister@qq.com"
+
+WORKDIR /app
+
+RUN git clone --depth=1 https://github.com/hiyouga/ChatGLM-Efficient-Tuning.git
+
+
+WORKDIR /app/ChatGLM-Efficient-Tuning
+
+RUN pip install --upgrade pip && \
+    pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && \
+    pip install datasets loralib sentencepiece transformers bitsandbytes peft \
+    gradio fire cpm_kernels mdtex2html deepspeed jieba rouge_chinese nltk fastapi \
+    uvicorn trl accelerate protobuf
+
+RUN set -xe \
+    && apt-get update \
+    && apt-get -y install net-tools inetutils-ping
+

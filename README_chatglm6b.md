@@ -110,7 +110,7 @@ docker run hello-world
    cmd/finetune_chatglm.sh
    ```
    然后在镜像内，执行如下脚本，启动finetune，需要较长时间，如果担心控制台中断，可以在进行镜像前，启动一个tmux会话窗口。
-   如果机器上只有两块T4显卡，采用fp16会出现显存不足的情况，需要在ds_train.finetune.sh文件的最后，加上一行：--quantization_bit 4，同时把 --num_gpus=4 改成 --num_gpus=2 。
+   如果机器上只有两块T4显卡，采用fp16会出现显存不足的情况，需要在ds_train_finetune.sh文件的最后，加上一行：--quantization_bit 4，同时把 --num_gpus=4 改成 --num_gpus=2 。
    ```shell
    bash ds_train_finetune.sh
    ```
