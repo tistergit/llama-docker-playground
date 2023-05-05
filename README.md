@@ -5,3 +5,5 @@
 [LLaMA大模型](./README_llama.md)
 
 [ChatGLM-6B模型](./README_chatglm6b.md)
+
+[ChatGLM-6B模型微调Mini手册](./README_glm6b_mini.md)

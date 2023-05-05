@@ -99,10 +99,26 @@ $ git clone https://github.com/tistergit/llama-docker-playground.git
     --quantization_bit 8
 ```
 
+### 命令行推理
+
+```bash
+$ CUDA_VISIBLE_DEVICES=0 python src/infer.py \
+    --checkpoint_dir checkpoint
+```
+
+### 浏览器测试
+
+```bash
+$ CUDA_VISIBLE_DEVICES=0 python src/web_demo.py \
+    --checkpoint_dir checkpoint
+```
+打开浏览器，输入服务器IP+8080端口即可访问
+
 
 ### 训练数据集
 关于数据集文件的格式，请参考 data/example_dataset 文件夹的内容。构建自定义数据集时，既可以使用单个 .json 文件，也可以使用一个数据加载脚本和多个文件。
 
 注意：使用自定义数据集时，请更新 data/dataset_info.json 文件，该文件的格式请[参考](https://github.com/hiyouga/ChatGLM-Efficient-Tuning/tree/main/data)
+
 
   enjoy it ~~~
