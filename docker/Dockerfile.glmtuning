@@ -11,9 +11,9 @@ WORKDIR /app/ChatGLM-Efficient-Tuning
 
 RUN pip install --upgrade pip && \
     pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && \
-    pip install datasets loralib sentencepiece transformers bitsandbytes peft \
-    gradio fire cpm_kernels mdtex2html deepspeed jieba rouge_chinese nltk fastapi \
-    uvicorn trl accelerate protobuf
+    pip install datasets sentencepiece transformers bitsandbytes peft \
+    gradio fire cpm_kernels mdtex2html jieba rouge_chinese nltk fastapi \
+    trl accelerate protobuf
 
 # RUN set -xe \
 #     && apt-get update \
