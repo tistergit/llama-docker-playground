@@ -15,7 +15,7 @@ RUN pip install --upgrade pip && \
     gradio fire cpm_kernels mdtex2html deepspeed jieba rouge_chinese nltk fastapi \
     uvicorn trl accelerate protobuf
 
-RUN set -xe \
-    && apt-get update \
-    && apt-get -y install net-tools inetutils-ping
+# RUN set -xe \
+#     && apt-get update \
+#     && apt-get -y install net-tools inetutils-ping
 
