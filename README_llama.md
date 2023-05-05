@@ -20,7 +20,7 @@ docker run hello-world
 1. 编辑 docker/Dockerfile.lora-finetune 文件
 2. 构建镜像
 ```shell
-cmd/build_image.sh
+cmd/build_llama.sh
 ```
 3. PUSH镜像到仓库（可选）
 

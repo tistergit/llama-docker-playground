@@ -18,7 +18,7 @@ docker run hello-world
 1. 编辑 docker/Dockerfile.chatglm-finetune 文件
 2. 构建镜像
    ```shell
-   cmd/build_image4chatglm.sh
+   cmd/build_chatglm.sh
    ```
 3. PUSH镜像到仓库（可选）
 
