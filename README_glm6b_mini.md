@@ -60,7 +60,7 @@ $ git clone https://github.com/tistergit/llama-docker-playground.git
 
 ### 微调方法
 
-目前我们实现了针对以下高效微调方法的支持：
+目前支持了以下几种微调方法：
 
 - [LoRA](https://arxiv.org/abs/2106.09685)
   - 仅微调低秩适应器。
@@ -71,15 +71,16 @@ $ git clone https://github.com/tistergit/llama-docker-playground.git
 
 ### Fine-tune(参数微调)
    
-1. Finetune
    首先，进入镜像内环境：
    ```shell
    cmd/finetune_chatglm_v2.sh
    ```
    然后在镜像内，执行如下脚本，启动finetune，需要较长时间，如果担心控制台中断，可以在进行镜像前，启动一个tmux会话窗口。
-   如果机器上只有两块T4显卡，采用fp16会出现显存不足的情况，需要在ds_train_finetune.sh文件的最后，加上一行：--quantization_bit 4，同时把 --num_gpus=4 改成 --num_gpus=2 。
-
-   #### 单 GPU 微调训练
+   如果机器上只有两块T4显卡，可能会出现显存不足的情况，可以考虑对模型进行量化后微调，当然这样会对模型效果带来一定折损，比如：--quantization_bit 8 。其它参数说明：
+  
+  - dataset: 训练数据集名称，详见[训练数据集](#训练数据集)
+  - finetuning_type: 微调方法，lora or  p_tuning or freeze
+  - output_dir: 生成的checkpoint目录，已映射到docker外volume上
 
 ```bash
    CUDA_VISIBLE_DEVICES=0,1 python src/finetune.py \
@@ -98,5 +99,10 @@ $ git clone https://github.com/tistergit/llama-docker-playground.git
     --quantization_bit 8
 ```
 
+
+### 训练数据集
+关于数据集文件的格式，请参考 data/example_dataset 文件夹的内容。构建自定义数据集时，既可以使用单个 .json 文件，也可以使用一个数据加载脚本和多个文件。
+
+注意：使用自定义数据集时，请更新 data/dataset_info.json 文件，该文件的格式请[参考](https://github.com/hiyouga/ChatGLM-Efficient-Tuning/tree/main/data)
 
   enjoy it ~~~
