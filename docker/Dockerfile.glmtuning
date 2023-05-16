@@ -13,7 +13,7 @@ RUN pip install --upgrade pip && \
     pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple && \
     pip install datasets sentencepiece transformers bitsandbytes peft \
     gradio fire cpm_kernels mdtex2html jieba rouge_chinese nltk fastapi \
-    trl accelerate protobuf
+    trl accelerate protobuf dataclass_wizard icetk SwissArmyTransformer
 
 # RUN set -xe \
 #     && apt-get update \
