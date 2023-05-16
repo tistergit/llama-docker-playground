@@ -4,7 +4,7 @@ LABEL org.opencontainers.image.authors="tister@qq.com"
 
 WORKDIR /app
 
-RUN git clone --depth=1 https://github.com/hiyouga/ChatGLM-Efficient-Tuning.git
+RUN git clone --depth=1 https://github.com/THUDM/GLM-130B.git
 
 
 WORKDIR /app/ChatGLM-Efficient-Tuning
@@ -13,7 +13,7 @@ RUN pip install --upgrade pip && \
     pip config set global.index-url https://mirrors.cloud.tencent.com/pypi/simple && \
     pip install datasets sentencepiece transformers bitsandbytes peft \
     gradio fire cpm_kernels mdtex2html jieba rouge_chinese nltk fastapi \
-    trl accelerate protobuf 
+    trl accelerate protobuf dataclass_wizard icetk "SwissArmyTransformer>=0.2.12,<0.3"
 
 # RUN set -xe \
 #     && apt-get update \
