@@ -7,7 +7,7 @@ WORKDIR /app
 RUN git clone --depth=1 https://github.com/THUDM/GLM-130B.git
 
 
-WORKDIR /app/ChatGLM-Efficient-Tuning
+WORKDIR /app/GLM-130B
 
 RUN pip install --upgrade pip && \
     pip config set global.index-url https://mirrors.cloud.tencent.com/pypi/simple && \
