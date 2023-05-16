@@ -19,7 +19,5 @@ RUN pip install --upgrade pip && \
 #     && apt-get update \
 #     && apt-get -y install net-tools inetutils-ping
 
-COPY scripts/finetune.sh .
-COPY scripts/cli_infer.sh .
-COPY scripts/web_demo.sh .
-COPY down_model.py .
+COPY patches/chatglm130b/model_glm_130b_int4.sh ./configs/
+COPY patches/chatglm130b/generate.sh ./scripts/
