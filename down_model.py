@@ -11,7 +11,7 @@ from concurrent.futures import ThreadPoolExecutor, Future, as_completed, wait
 from multiprocessing import cpu_count
 from urllib.request import urlopen
 from huggingface_hub import snapshot_download
-from getopt import getopt
+import argparse
 
 
 MODEL_BASE_URL = "https://mirrors.tencent.com/repository/generic/llm_repo/chatglm-6b/"
@@ -39,7 +39,26 @@ chatglm6b_files = [
     'quantization.py',
     'README.md',
     'tokenization_chatglm.py',
-    'tokenizer_config.json']
+    'tokenizer_config.json'
+]
+
+chatglm130b_files = [
+    '49300/mp_rank_04_model_states.pt',
+    '49300/mp_rank_00_model_states.pt',
+    '49300/mp_rank_06_model_states.pt',
+    '49300/mp_rank_02_model_states.pt',
+    '49300/mp_rank_07_model_states.pt',
+    '49300/mp_rank_05_model_states.pt',
+    '49300/mp_rank_01_model_states.pt',
+    '49300/mp_rank_03_model_states.pt',
+    'latest'
+]
+
+llama_7B_files = [
+    'checklist.chk',
+    'consolidated.00.pth',
+    'params.json'
+]
 
 
 def download_file(url, dst_file):
@@ -67,45 +86,41 @@ def down_from_tencent():
     wait(tasks)
 
 
-def down_from_hf():
+def down_from_hf(model):
     # original model 'THUDM/chatglm-6b' quantized 4bit 'THUDM/chatglm-6b-int4' 8bit 'THUDM/chatglm-6b-int8'
     repos_id = 'THUDM/chatglm-6b'
+
+    hf_map = {
+        'chatglm6b': 'THUDM/chatglm-6b',
+    }
+
     # download_dir='./'+repos_id
-    snapshot_download(repo_id=repos_id, local_dir=MODEL_DIR,
+    snapshot_download(repo_id=hf_map[model], local_dir=MODEL_DIR,
                       repo_type='model', local_dir_use_symlinks=False)
+
 
 def usage():
     """
     模型下载脚本
     """
-    print("python down_model.py -f or --huggingface to download from huggingface hub")
-    print("python down_model.py -t or --tencent to download from tencent mirror")
+    print("python down_model.py -f or --from huggingface or tencent,default : tencent ")
+    print("python down_model.py -t or --model ")
     print("python down_model.py -h or --help to show this message")
 
 
 if __name__ == '__main__':
-    try:
-        option, arguments = getopt(sys.argv[1:], "hft",["help","huggingface","tencent"])
-    except:
-        usage()
-        sys.exit()
 
-    huggingface_flag = False
-    tencent_flag = False
+    parser = argparse.ArgumentParser()
 
-    for opt, variable in option:
-        if opt in ("-h", "--help"):
-            usage()
-            sys.exit()
-        elif opt in ('-f','--huggingface'):
-            huggingface_flag = True
-        elif opt in ('-t','--tencent'):
-            tencent_flag = True
-        else:
-            usage()
-            sys.exit()
-    if tencent_flag:
+    parser.add_argument("-h", "--help", help="echo the string you use here")
+    parser.add_argument(
+        "-s", "--source", help="huggingface or tencent,default : tencent", default='tencent')
+    parser.add_argument(
+        "-m", "--model", help="model type,chatglm130b chatglm6b,llama7B llama13B")
+
+    args = parser.parse_args()
+
+    if args.source == 'tencent':
         down_from_tencent()
-    elif huggingface_flag:
+    else:
         down_from_hf()
-
