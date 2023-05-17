@@ -1,6 +1,6 @@
 MODEL_TYPE="glm-130b"
-CHECKPOINT_PATH="/app/models/chatglm-130b"
-MP_SIZE=8
+CHECKPOINT_PATH="/app/models/chatglm-130b-int4"
+MP_SIZE=4
 MODEL_ARGS="--model-parallel-size ${MP_SIZE} \
             --num-layers 70 \
             --hidden-size 12288 \
