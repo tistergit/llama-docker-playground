@@ -13,7 +13,8 @@ RUN pip install --upgrade pip && \
     pip config set global.index-url https://mirrors.cloud.tencent.com/pypi/simple && \
     pip install datasets sentencepiece transformers bitsandbytes peft \
     gradio fire cpm_kernels mdtex2html jieba rouge_chinese nltk fastapi \
-    trl accelerate protobuf dataclass_wizard icetk "SwissArmyTransformer>=0.2.12,<0.3"
+    trl accelerate protobuf dataclass_wizard icetk "SwissArmyTransformer>=0.2.12,<0.3" \
+    git+https://github.com/THUDM/FasterTransformer.git
 
 # RUN set -xe \
 #     && apt-get update \
