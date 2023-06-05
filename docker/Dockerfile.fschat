@@ -8,7 +8,7 @@ ARG BASE_IMAGE=nvcr.io/nvidia/pytorch:${DOCKER_VERSION}-py3
 FROM ${BASE_IMAGE}
 LABEL org.opencontainers.image.authors="tister@qq.com"
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends bc git-lfs&& \
+    apt-get install -y --no-install-recommends bc git-lfs && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -32,8 +32,9 @@ RUN git submodule update --init --recursive && \
 # RUN pip uninstall -y apex && \
 #     pip install git+https://github.com/NVIDIA/apex --global-option="--cpp_ext" --global-option="--cuda_ext" --global-option="--fast_layer_norm" && \
 #     pip install 3rdparty/NeMo[nlp]
-RUN pip install --upgrade --no-cache-dir pip \
- && pip install --no-cache-dir 3rdparty/NeMo[nlp]
+RUN pip config set global.index-url https://mirrors.cloud.tencent.com/pypi/simple 
+RUN pip install --upgrade --no-cache-dir pip && \
+    pip install --no-cache-dir 3rdparty/NeMo[nlp] fschat
 
 ENV NCCL_LAUNCH_MODE=GROUP
 ARG SM=80
