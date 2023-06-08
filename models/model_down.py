@@ -17,7 +17,7 @@ import logging
 MODEL_URL_PREFIX = "https://mirrors.tencent.com/repository/generic/llm_repo/"
 
 
-MODEL_DIR =os.path.dirname(__file__)
+MODEL_DIR = os.path.dirname(__file__)
 
 THREAD_COUNT = 4
 
@@ -58,6 +58,21 @@ chatglm130b_files = [
 models_files = {
     'chatglm-6b': chatglm6b_files,
     'chatglm-130b': chatglm130b_files,
+    'tatsu-lab/alpaca-farm-ppo-sim-gpt4-20k-wdiff': [
+        'added_tokens.json',
+        'config.json',
+        'generation_config.json',
+        'model_sum.txt',
+        'pytorch_model-00001-of-00003.bin',
+        'pytorch_model-00002-of-00003.bin',
+        'pytorch_model-00003-of-00003.bin',
+        'pytorch_model.bin.index.json',
+        'README.md',
+        'special_tokens_map.json',
+        'tokenizer_config.json',
+        'tokenizer.json',
+        'tokenizer.model'
+        ],
     'llama': {
         'common': [
             'tokenizer.model',
@@ -89,8 +104,8 @@ def download_file(url, dst_file):
     resp = requests.get(url, stream=True)
     logging.info("resp.status_code: %s" % resp.status_code)
     content_size = int(resp.headers['Content-Length']) / 1024  # 确定整个安装包的大小
-    
-    ## 目录不存在，创建目录
+
+    # 目录不存在，创建目录
     if not os.path.exists(os.path.dirname(dst_file)):
         os.makedirs(os.path.dirname(dst_file))
 
@@ -111,6 +126,7 @@ def llama_common():
         files.append((url, dst_file))
     return files
 
+
 def down_from_tencent(model, llama_id):
     executor = ThreadPoolExecutor(max_workers=THREAD_COUNT)
     down_files = []
@@ -118,9 +134,9 @@ def down_from_tencent(model, llama_id):
         down_files.append(llama_common())
         url_base = os.path.join(MODEL_URL_PREFIX, 'llama/', llama_id)
         for file in models_files['llama'][llama_id]:
-            dst_file = os.path.join(MODEL_DIR, 'llama/', llama_id,file)
+            dst_file = os.path.join(MODEL_DIR, 'llama/', llama_id, file)
             file_url = os.path.join(url_base, file)
-            down_files.append((file_url,dst_file))
+            down_files.append((file_url, dst_file))
     else:
         for file in models_files[model]:
             file_url = os.path.join(MODEL_URL_PREFIX, model, file)
@@ -128,7 +144,6 @@ def down_from_tencent(model, llama_id):
             down_files.append((file_url, dst_file))
 
     logging.info("down_files : %s" % down_files)
-
 
     for url, dst_file in down_files:
         logging.info("url : %s , dst_file : %s" % (url, dst_file))
@@ -141,14 +156,16 @@ def down_from_hf(model_id):
     snapshot_download(repo_id=model_id, local_dir='./' + model_id,
                       repo_type='model', local_dir_use_symlinks=False)
 
-def put_model_generic(username,token,path,filename):
-    url = os.path.join(MODEL_URL_PREFIX,path,filename)
-    file_full_path = os.path.join(path,filename)
+
+def put_model_generic(username, token, path, filename):
+    url = os.path.join(MODEL_URL_PREFIX, path, filename)
+    file_full_path = os.path.join(path, filename)
     logging.info("put model to generic , url : %s" % url)
     logging.info("put model to generic , file_full_path : %s" % file_full_path)
 
     with open(file_full_path, "rb") as fp:
-        response = requests.request("PUT", url, auth=(username, token), data=fp)
+        response = requests.request(
+            "PUT", url, auth=(username, token), data=fp)
 
     print(response.text)
 
@@ -165,15 +182,15 @@ if __name__ == '__main__':
     )
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("-a" , "--action", help="pull or push")
+    parser.add_argument("-a", "--action", help="pull or push")
     parser.add_argument(
         "--source", help="hf or tx , default : tx ")
     parser.add_argument(
-        "--model", help="model type,chatglm-130b chatglm-6b,llama")
+        "--model", help="model type,chatglm-130b chatglm-6b,llama,tatsu-lab/alpaca-farm-ppo-sim-gpt4-20k-wdiff")
     parser.add_argument(
         "--llama_id", help="llama model id: 7B 13B 30B 65B, default : 7B", default='7B')
-    
-    parser.add_argument("--local_dir",help="local dir")
+
+    parser.add_argument("--local_dir", help="local dir")
 
     args = parser.parse_args()
 
@@ -192,8 +209,8 @@ if __name__ == '__main__':
             logging.error("GENERIC_USERNAME or GENERIC_TOKEN is not set")
             exit(1)
         local_dir = args.local_dir
-        for fpathe,dirs,fs in os.walk(local_dir):
+        for fpathe, dirs, fs in os.walk(local_dir):
             for f in fs:
-                put_model_generic(username,token,fpathe,f)
+                put_model_generic(username, token, fpathe, f)
     else:
         parser.print_help()
