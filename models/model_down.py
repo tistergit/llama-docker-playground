@@ -12,11 +12,12 @@ from multiprocessing import cpu_count
 from urllib.request import urlopen
 from huggingface_hub import snapshot_download
 import argparse
+import logging
+
+MODEL_URL_PREFIX = "https://mirrors.tencent.com/repository/generic/llm_repo/"
 
 
-MODEL_BASE_URL = "https://mirrors.tencent.com/repository/generic/llm_repo/"
-MODEL_DIR = os.path.join(os.path.dirname(
-    __file__), 'models')
+MODEL_DIR =os.path.dirname(__file__)
 
 THREAD_COUNT = 4
 
@@ -54,32 +55,27 @@ chatglm130b_files = [
     'latest'
 ]
 
-llama_7B_files = [
-    'checklist.chk',
-    'consolidated.00.pth',
-    'params.json'
-]
+models_files = {
+    'chatglm-6b': chatglm6b_files,
+    'chatglm-130b': chatglm130b_files,
+    'llama': {
+        'common': [
+            'tokenizer.model',
+            'tokenizer_checklist.chk'
+        ],
+        '7B': [
+            'checklist.chk',
+            'consolidated.00.pth',
+            'params.json'
+        ],
+        '13B': [
+            'consolidated.00.pth',
+            'consolidated.01.pth',
+            'params.json',
+            'checklist.chk']
 
-llama_files = {
-    '7B': [
-        'checklist.chk',
-        'consolidated.00.pth',
-        'params.json'
-    ],
-    '13B': [
-        'consolidated.00.pth',
-        'consolidated.01.pth',
-        'params.json',
-        'checklist.chk']
-
+    }
 }
-
-llama_13B_files = [
-    'consolidated.00.pth',
-    'consolidated.01.pth',
-    'params.json',
-    'checklist.chk'
-]
 
 vicuna_7b_files = [
     'checklist.chk',
@@ -87,10 +83,16 @@ vicuna_7b_files = [
 
 
 def download_file(url, dst_file):
-    print("------", "Start download with requests")
+    logging.info(
+        "=== Start download with requests , url: %s , dst_file: %s === " % (url, dst_file))
     name = url.split("/")[-1]
     resp = requests.get(url, stream=True)
+    logging.info("resp.status_code: %s" % resp.status_code)
     content_size = int(resp.headers['Content-Length']) / 1024  # 确定整个安装包的大小
+    
+    ## 目录不存在，创建目录
+    if not os.path.exists(os.path.dirname(dst_file)):
+        os.makedirs(os.path.dirname(dst_file))
 
     print("File path:%s, content_size:%s" % (dst_file, content_size))
     with open(dst_file, "wb") as file:
@@ -100,16 +102,36 @@ def download_file(url, dst_file):
     print("%s download ok" % name)
 
 
-def down_from_tencent(model_id, llama_id):
+def llama_common():
+    files = []
+    for file in models_files['llama']['common']:
+        url = os.path.join(MODEL_URL_PREFIX, 'llama/', file)
+        dst_file = os.path.join(MODEL_DIR, 'llama/', file)
+        logging.info("url : %s , dst_file : %s" % (url, dst_file))
+        files.append((url, dst_file))
+    return files
+
+def down_from_tencent(model, llama_id):
     executor = ThreadPoolExecutor(max_workers=THREAD_COUNT)
-    if model_id == 'llama':
-        url = MODEL_BASE_URL + 'llama/'
-        files = llama_files[llama_id]
-        models_dir = os.path.join(MODEL_DIR, 'llama/',llama_id)
-    for file in files:
-        url = os.path.join(url, file)
-        dst_file = os.path.join(models_dir, file)
-        print("dst file : ", dst_file)
+    down_files = []
+    if model == 'llama':
+        down_files.append(llama_common())
+        url_base = os.path.join(MODEL_URL_PREFIX, 'llama/', llama_id)
+        for file in models_files['llama'][llama_id]:
+            dst_file = os.path.join(MODEL_DIR, 'llama/', llama_id,file)
+            file_url = os.path.join(url_base, file)
+            down_files.append((file_url,dst_file))
+    else:
+        for file in models_files[model]:
+            file_url = os.path.join(MODEL_URL_PREFIX, model, file)
+            dst_file = os.path.join(MODEL_DIR, model, file)
+            down_files.append((file_url, dst_file))
+
+    logging.info("down_files : %s" % down_files)
+
+
+    for url, dst_file in down_files:
+        logging.info("url : %s , dst_file : %s" % (url, dst_file))
         args = [url, dst_file,]
         tasks = [executor.submit(lambda p:download_file(*p), args)]
     wait(tasks)
@@ -122,19 +144,28 @@ def down_from_hf(model_id):
 
 if __name__ == '__main__':
 
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        handlers=[
+            logging.FileHandler("downlog.log"),
+            logging.StreamHandler()
+        ]
+    )
+
     parser = argparse.ArgumentParser()
-
     parser.add_argument(
-        "-s", "--source", help="hf or tx , default : tx ", default='hf')
+        "-s", "--source", help="hf or tx , default : tx ")
     parser.add_argument(
-        "-m", "--model", help="model type,chatglm130b chatglm6b,llama")
-
+        "-m", "--model", help="model type,chatglm-130b chatglm-6b,llama")
     parser.add_argument(
         "-l", "--llama_id", help="llama model id: 7B 13B 30B 65B, default : 7B", default='7B')
-
     args = parser.parse_args()
 
     if args.source == 'tx':
         down_from_tencent(args.model, args.llama_id)
-    else:
+    elif args.source == 'hf':
         down_from_hf(args.model)
+
+    if not args.model:
+        parser.print_help()
