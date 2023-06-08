@@ -139,7 +139,18 @@ def down_from_tencent(model, llama_id):
 
 def down_from_hf(model_id):
     snapshot_download(repo_id=model_id, local_dir='./' + model_id,
-                      repo_type='model', local_dir_use_symlinks="auto")
+                      repo_type='model', local_dir_use_symlinks=False)
+
+def put_model_generic(username,token,path,filename):
+    url = os.path.join(MODEL_URL_PREFIX,path,filename)
+    file_full_path = os.path.join(path,filename)
+    logging.info("put model to generic , url : %s" % url)
+    logging.info("put model to generic , file_full_path : %s" % file_full_path)
+
+    with open(file_full_path, "rb") as fp:
+        response = requests.request("PUT", url, auth=(username, token), data=fp)
+
+    print(response.text)
 
 
 if __name__ == '__main__':
@@ -154,18 +165,35 @@ if __name__ == '__main__':
     )
 
     parser = argparse.ArgumentParser()
+    parser.add_argument("-a" , "--action", help="pull or push")
     parser.add_argument(
-        "-s", "--source", help="hf or tx , default : tx ")
+        "--source", help="hf or tx , default : tx ")
     parser.add_argument(
-        "-m", "--model", help="model type,chatglm-130b chatglm-6b,llama")
+        "--model", help="model type,chatglm-130b chatglm-6b,llama")
     parser.add_argument(
-        "-l", "--llama_id", help="llama model id: 7B 13B 30B 65B, default : 7B", default='7B')
+        "--llama_id", help="llama model id: 7B 13B 30B 65B, default : 7B", default='7B')
+    
+    parser.add_argument("--local_dir",help="local dir")
+
     args = parser.parse_args()
 
-    if args.source == 'tx':
-        down_from_tencent(args.model, args.llama_id)
-    elif args.source == 'hf':
-        down_from_hf(args.model)
-
-    if not args.model:
+    if args.action == 'pull':
+        if args.source == 'tx':
+            down_from_tencent(args.model, args.llama_id)
+        elif args.source == 'hf':
+            down_from_hf(args.model)
+        if not args.model:
+            parser.print_help()
+    if args.action == 'push':
+        # Get environment variables
+        username = os.getenv('GENERIC_USERNAME')
+        token = os.environ.get('GENERIC_TOKEN')
+        if username is None or token is None:
+            logging.error("GENERIC_USERNAME or GENERIC_TOKEN is not set")
+            exit(1)
+        local_dir = args.local_dir
+        for fpathe,dirs,fs in os.walk(local_dir):
+            for f in fs:
+                put_model_generic(username,token,fpathe,f)
+    else:
         parser.print_help()
