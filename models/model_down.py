@@ -17,9 +17,9 @@ import logging
 MODEL_URL_PREFIX = "https://mirrors.tencent.com/repository/generic/llm_repo/"
 
 
-MODEL_DIR = os.path.dirname(__file__)
+MODEL_DIR = "./"
 
-THREAD_COUNT = 4
+THREAD_COUNT = 1
 
 chatglm6b_files = [
     'config.json',
@@ -104,26 +104,30 @@ def download_file(url, dst_file):
     resp = requests.get(url, stream=True)
     logging.info("resp.status_code: %s" % resp.status_code)
     content_size = int(resp.headers['Content-Length']) / 1024  # 确定整个安装包的大小
-
+    logging.info("content_size: %s" % content_size)
     # 目录不存在，创建目录
     if not os.path.exists(os.path.dirname(dst_file)):
+        logging.warn("dir not exists , create dir : %s" % os.path.exists(os.path.dirname(dst_file)))
         os.makedirs(os.path.dirname(dst_file))
 
-    print("File path:%s, content_size:%s" % (dst_file, content_size))
+    logging.info("File path: %s, content_size: %s" % (dst_file, content_size))
+
     with open(dst_file, "wb") as file:
-        print("\rFile %s, total size is: %s" % (name, content_size))
+        logging.info("File %s, total size is: %s" % (name, content_size))
         for data in tqdm(iterable=resp.iter_content(1024), total=content_size, unit='k', desc=name):
             file.write(data)
-    print("%s download ok" % name)
+    logging.info("%s download ok" % name)
 
 
 def llama_common():
+    logging.info("Add LLaMa Common files start ")
     files = []
     for file in models_files['llama']['common']:
         url = os.path.join(MODEL_URL_PREFIX, 'llama/', file)
         dst_file = os.path.join(MODEL_DIR, 'llama/', file)
         logging.info("url : %s , dst_file : %s" % (url, dst_file))
         files.append((url, dst_file))
+    logging.info("Add LLaMa Common files end , files : %s " % files)
     return files
 
 
@@ -131,9 +135,10 @@ def down_from_tencent(model, llama_id):
     executor = ThreadPoolExecutor(max_workers=THREAD_COUNT)
     down_files = []
     if model == 'llama':
-        down_files.append(llama_common())
+        down_files.extend(llama_common())
         url_base = os.path.join(MODEL_URL_PREFIX, 'llama/', llama_id)
         for file in models_files['llama'][llama_id]:
+            logging.info("MODEL_DIR : %s " , MODEL_DIR)
             dst_file = os.path.join(MODEL_DIR, 'llama/', llama_id, file)
             file_url = os.path.join(url_base, file)
             down_files.append((file_url, dst_file))
@@ -182,6 +187,9 @@ if __name__ == '__main__':
     )
 
     parser = argparse.ArgumentParser()
+
+    parser.add_argument("-t","--threads", help="threads count", default=1)
+
     parser.add_argument("-a", "--action", help="pull or push")
     parser.add_argument(
         "--source", help="hf or tx , default : tx ")
@@ -194,6 +202,8 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
 
+    THREAD_COUNT = int(args.threads)
+
     if args.action == 'pull':
         if args.source == 'tx':
             down_from_tencent(args.model, args.llama_id)
@@ -201,7 +211,8 @@ if __name__ == '__main__':
             down_from_hf(args.model)
         if not args.model:
             parser.print_help()
-    if args.action == 'push':
+            exit(1)
+    elif args.action == 'push':
         # Get environment variables
         username = os.getenv('GENERIC_USERNAME')
         token = os.environ.get('GENERIC_TOKEN')
