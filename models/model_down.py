@@ -17,6 +17,11 @@ import logging
 MODEL_URL_PREFIX = "https://mirrors.tencent.com/repository/generic/llm_repo/"
 
 
+import os
+
+proxy = 'http://11.148.18.22:8899'
+
+
 MODEL_DIR = "./"
 
 THREAD_COUNT = 1
@@ -200,9 +205,18 @@ if __name__ == '__main__':
 
     parser.add_argument("--local_dir", help="local dir")
 
+    parser.add_argument("-p","--proxy",action="store_true",default=False,help="use proxy")
+
+
     args = parser.parse_args()
 
     THREAD_COUNT = int(args.threads)
+
+    if args.proxy:
+        os.environ['http_proxy'] = proxy 
+        os.environ['HTTP_PROXY'] = proxy
+        os.environ['https_proxy'] = proxy
+        os.environ['HTTPS_PROXY'] = proxy
 
     if args.action == 'pull':
         if args.source == 'tx':
